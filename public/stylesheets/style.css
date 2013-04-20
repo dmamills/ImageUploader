@@ -1,7 +1,11 @@
 body {
 	background-color:#CCCCCC;
-
 }
 footer {
 
+}
+form {
+	border: 1px solid red;
+	width:350px;
+	padding:10px;
 }

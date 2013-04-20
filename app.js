@@ -3,6 +3,7 @@ var express = require('express');
 	util = require('util'),
 	mongoose = require('mongoose'),
 	fs = require('fs');
+
 //setup mongo db
 mongoose.connect('mongodb://localhost/imagedb');
 var db = mongoose.connection;
@@ -43,16 +44,11 @@ app.use(function(req,res){
 
 
 app.param('imgname',function(req,res,next,imgname){
-
-	//find filename
 	File.findOne({'url':imgname},function(err,doc){
 		if(err)throw err;
-
 		req.img = doc;
 		next();
 	});
-	//add to req
-
 });
 
 app.get('/',function(req,res){
@@ -100,13 +96,12 @@ app.post('/upload',function(req,res){
 	
 		});
 	} else {
-		res.send('nofile',{'title':'No File Selected'});
+		res.render('nofile',{'title':'No File Selected'});
 	}
 });
 
 app.get('/imageview/:imgname',function(req,res){
-
-	res.render('imageview',{'title':'Picture','imgname':req.img.path})
+	res.render('imageview',{'title':'Picture','imgname':req.img.path});
 });
 
 app.get('/about',function(req,res){
