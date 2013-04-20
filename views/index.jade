@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	div.container.span10.offset2
+		.hero-unit
+			h1 Image Uploader
+			p Easily upload and share photos.
+			p Suspendisse ut eros nisl, eu malesuada libero. Sed venenatis, nibh ac viverra elementum, 
+				| quam erat viverra tellus, sed eleifend eros quam vitae neque. Quisque venenatis lacus dignissim turpis iaculis convallis. 
+				| Duis arcu elit, venenatis et feugiat eu, tincidunt ac justo. Sed vitae mi ligula. Nulla volutpat dolor 
+				| non ligula bibendum sollicitudin. Maecenas non massa ante. Sed ullamcorper mauris nec risus imperdiet vitae vestibulum urna blandit. 
+			form(action='/upload',enctype='multipart/form-data', method='POST')
+				label(for='img') Upload Image:
+				input(type='file',name='img')
+				input(type='submit',value='submit',class='btn btn-primary')

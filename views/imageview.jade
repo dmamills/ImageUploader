@@ -1,0 +1,8 @@
+extends layout
+
+block content
+	.hero-unit
+		h1 uploaded file:
+		img(src='/uploads/#{imgname}')
+		br
+		a(href='/uploads/#{imgname}') Direct link
