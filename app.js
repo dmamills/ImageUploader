@@ -104,6 +104,14 @@ app.get('/imageview/:imgname',function(req,res){
 	res.render('imageview',{'title':'Picture','imgname':req.img.path});
 });
 
+app.get('/recent',function(req,res){
+
+	File.find({}).limit(10).exec(function(err,docs){
+		if(err)throw err;
+		res.render('recentuploads',{'title':'Recent Uploads','imgs':docs});
+	});
+});
+
 app.get('/about',function(req,res){
 	res.render('about',{'title':'About'});
 });

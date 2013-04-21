@@ -4,3 +4,10 @@ block content
 	.container.span10.offset2
 		.hero-unit
 			h1 Recent Uploads
+				ul
+					-each img in imgs
+						li.recent
+							a(href='/imageview/#{img.url}', class='thumbnail')
+								img(src='/uploads/#{img.path}', width='260px',height='180px')
+							br
+

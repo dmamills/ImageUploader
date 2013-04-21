@@ -5,7 +5,9 @@ footer {
 
 }
 form {
-	border: 1px solid red;
 	width:350px;
 	padding:10px;
+}
+.recent{
+	list-style-type:none;
 }
