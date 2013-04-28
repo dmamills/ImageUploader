@@ -11,3 +11,6 @@ form {
 .recent{
 	list-style-type:none;
 }
+.container {
+	margin: 0 auto;
+}

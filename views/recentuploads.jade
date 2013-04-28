@@ -1,13 +1,22 @@
 extends layout
 
 block content
-	.container.span10.offset2
+	.container
 		.hero-unit
 			h1 Recent Uploads
-				ul
-					-each img in imgs
-						li.recent
-							a(href='/imageview/#{img.url}', class='thumbnail')
-								img(src='/uploads/#{img.path}', width='260px',height='180px')
-							br
+			ul
+				- if (imgs.length > 0) {
+				-each img in imgs
+					li.recent
+						a(href='/imageview/#{img.url}', class='thumbnail')
+							img(src='/uploads/#{img.path}', width='260px',height='180px')
+						br
+						p Tags: 
+						span(id='tags') #{img.tags}
+				-} else {
+					p No images found. Try another Search
+					form(action='/search', method='POST')
+						input(type='text',name='searchtags')
+						input(type='submit',value='Search',class='btn btn-primary')
 
+				-}

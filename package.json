@@ -1,13 +1,19 @@
 {
-	"name":"imageuploader",
-	"description":"upload and serve photos with express",
-	"version":"0.0.1",
-	"private":true,
+	"name": "imageuploader",
+	"description": "upload and serve photos with express",
+	"version": "0.0.1-3",
+	"private": true,
 	"dependencies": {
-				"express":"3.x",
-				"jade":"*",
-				"stylus":"*",
-				"mongoose":"*"
+		"express": "3.x",
+		"jade": "*",
+		"stylus": "*",
+		"mongoose": "*"
+	},
+	"subdomain": "dmamills-ImageUploader",
+	"scripts": {
+		"start": "node app.js"
+	},
+	"engines": {
+		"node": "0.8.x"
 	}
-
 }

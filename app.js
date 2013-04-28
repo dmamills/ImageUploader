@@ -2,16 +2,29 @@ var express = require('express');
 	stylus = require('stylus'),
 	util = require('util'),
 	mongoose = require('mongoose'),
-	fs = require('fs');
+	fs = require('fs'),
+	mongooseManager = require('./connectionManager');
 
-//setup mongo db
-mongoose.connect('mongodb://localhost/imagedb');
+
+fs.exists(__dirname+'/public/uploads', function (exists) {
+	console.log(exists ?'folder there':'making folder');
+  if(!exists){
+  	fs.mkdir(__dirname+'/public/uploads',function(err){
+		if(err)throw err;
+	});
+  }
+});
+
+
+//test test
+mongooseManager.c();
 var db = mongoose.connection;
 
 var fileSchema = {
 	location:String,
 	path:String,
-	url:String
+	url:String,
+	tags:Array
 };
 
 db.on('error',function(err){
@@ -42,11 +55,29 @@ app.use(function(req,res){
 	res.render('404',{'title':'Page Not Found'});
 })
 
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.send(500, 'Something broke!');
+});
 
 app.param('imgname',function(req,res,next,imgname){
 	File.findOne({'url':imgname},function(err,doc){
 		if(err)throw err;
 		req.img = doc;
+		next();
+	});
+});
+
+app.param('tag',function(req,res,next,tag){
+
+	console.log('recieved param: '+tag);
+    req.tagname = tag;
+    var a = [];
+    a.push(tag);
+	File.where('tags').in(a).exec(function(err,doc){
+		if(err)throw err;
+		console.log('found: '+doc.length);
+		req.imgs = doc;
 		next();
 	});
 });
@@ -58,6 +89,9 @@ app.get('/',function(req,res){
 app.post('/upload',function(req,res){
 	
 	var imgfile = req.files.img;
+	var tags = req.body.imgtags.split(',');
+
+	console.log('tags: '+tags);
 	console.log(util.inspect(imgfile));	
 	
 	if(imgfile.type == 'image/png' || imgfile.type =='image/jpeg' || imgfile.type == 'image/jpg') {
@@ -85,7 +119,7 @@ app.post('/upload',function(req,res){
 				if(err)throw err;
 	
 				var fileUrl = imgfile.path.replace('/tmp/','');
-					var newFile = File({'location':filepath,'path':filename,'url':fileUrl});
+					var newFile = File({'location':filepath,'path':filename,'url':fileUrl,'tags':tags});
 	
 				newFile.save(function(err){
 					if(err)throw err;
@@ -101,7 +135,7 @@ app.post('/upload',function(req,res){
 });
 
 app.get('/imageview/:imgname',function(req,res){
-	res.render('imageview',{'title':'Picture','imgname':req.img.path});
+	res.render('imageview',{'title':'Picture','img':req.img});
 });
 
 app.get('/recent',function(req,res){
@@ -110,6 +144,16 @@ app.get('/recent',function(req,res){
 		if(err)throw err;
 		res.render('recentuploads',{'title':'Recent Uploads','imgs':docs});
 	});
+});
+
+app.post('/search',function(req,res){
+	var searchTag = req.body.searchtags
+	res.redirect('/recent/'+searchTag);
+});
+
+app.get('/recent/:tag',function(req,res){
+	res.render('recentuploads',{'title':'Recent Tagged '+req.tagname,'imgs':req.imgs});
+
 });
 
 app.get('/about',function(req,res){

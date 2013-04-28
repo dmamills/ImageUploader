@@ -1,10 +1,20 @@
 extends layout
 
 block content
-	div.container.span10.offset2
+	div.container
 		.hero-unit
 			h1 Uploaded Image
-			a(href='/uploads/#{imgname}', class='thumbnail')
-				img(src='/uploads/#{imgname}', width='260px',height='180px')
+			a(href='/uploads/#{img.path}', class='thumbnail')
+				img(src='/uploads/#{img.path}', width='260px',height='180px')
 			br
-			a(href='/uploads/#{imgname}') Direct link
+			a(href='/uploads/#{img.path}') Direct link
+			br
+			p Tags:
+			span(id='tags') #{img.tags}
+			script(type='text/javascript')
+				var tags = $('#tags').html();
+				tags = tags.split(',');
+				for(var i =0; i < tags.length;i++) {
+					tags[i] = '<a href="/recent/'+tags[i] +'"> '+tags[i]+'</a>' 
+				}
+				$('#tags').html(tags);
