@@ -16,15 +16,15 @@ fs.exists(__dirname+'/public/uploads', function (exists) {
 });
 
 
-//test test
 mongooseManager.c();
 var db = mongoose.connection;
 
-var fileSchema = {
-	location:String,
-	path:String,
-	url:String,
-	tags:Array
+
+var fSchema = {
+	img: { data: Buffer, contentType:String},
+	name: String,
+	urlName: String,
+	tags: Array
 };
 
 db.on('error',function(err){
@@ -35,7 +35,7 @@ db.once('open',function(){
 	console.log('connection opened');
 });
 
-var File = mongoose.model('File',fileSchema);
+var File = mongoose.model('File',fSchema);
 
 
 var app = express();
@@ -61,8 +61,11 @@ app.use(function(err, req, res, next){
 });
 
 app.param('imgname',function(req,res,next,imgname){
-	File.findOne({'url':imgname},function(err,doc){
+
+	File.findOne({'urlName':imgname},function(err,doc){
 		if(err)throw err;
+
+		doc.img.stringified = doc.img.data.toString('base64');
 		req.img = doc;
 		next();
 	});
@@ -74,17 +77,28 @@ app.param('tag',function(req,res,next,tag){
     req.tagname = tag;
     var a = [];
     a.push(tag);
-	File.where('tags').in(a).exec(function(err,doc){
+	File.where('tags').in(a).exec(function(err,docs){
 		if(err)throw err;
-		console.log('found: '+doc.length);
-		req.imgs = doc;
+		console.log('found: '+docs.length);
+		for(var i =0; i < docs.length;i++){
+			docs[i].img.stringified = docs[i].img.data.toString('base64');
+		}
+
+		req.imgs = docs;
 		next();
 	});
 });
 
 app.get('/',function(req,res){
 	res.render('index',{'title':'Image Uploader'});
-})
+});
+
+
+app.get('/uploads/:imgname',function(req,res){
+	res.contentType(req.img.img.contentType);
+	res.send(req.img.img.data);
+});
+
 
 app.post('/upload',function(req,res){
 	
@@ -96,39 +110,22 @@ app.post('/upload',function(req,res){
 	
 	if(imgfile.type == 'image/png' || imgfile.type =='image/jpeg' || imgfile.type == 'image/jpg') {
 
-		fs.readFile(imgfile.path,function(err,data){
-			var filepath = __dirname+'/public/uploads/'+imgfile.path.replace('/tmp/','');
-			var filename = imgfile.path.replace('/tmp/','');
-			
-			switch(imgfile.type) {
-				case 'image/png':
-					filepath = filepath + '.png';
-					filename = filename + '.png';
-					break;
-				case 'image/jpeg':
-					filepath = filepath + '.jpeg';
-					filename = filename + '.jpeg';
-					break;
-				case 'image/jpg':
-					filepath = filepath + '.jpg';
-					filename = filename + '.jpg';
-					break;	
-			}
-			
-			fs.writeFile(filepath,data,function(err){
-				if(err)throw err;
-	
-				var fileUrl = imgfile.path.replace('/tmp/','');
-					var newFile = File({'location':filepath,'path':filename,'url':fileUrl,'tags':tags});
-	
-				newFile.save(function(err){
-					if(err)throw err;
-	
-					res.redirect('/imageview/'+fileUrl);
-				});	
-			});
-	
-		});
+		var file = new File();
+
+		file.img.data = fs.readFileSync(imgfile.path);
+		file.img.contentType = imgfile.type;
+		file.tags = tags;
+		file.name = imgfile.name;
+
+		//search for last backslash, substring from there.
+		var pathName = imgfile.path.split('/');
+		file.urlName = pathName[pathName.length-1];
+		file.save(function(err){
+
+			if(err)throw err;
+			res.redirect('/imageview/'+file.urlName);
+
+		});	
 	} else {
 		res.render('nofile',{'title':'No File Selected'});
 	}
@@ -142,6 +139,10 @@ app.get('/recent',function(req,res){
 
 	File.find({}).limit(10).exec(function(err,docs){
 		if(err)throw err;
+		for(var i =0; i < docs.length;i++){
+			docs[i].img.stringified = docs[i].img.data.toString('base64');
+		}
+
 		res.render('recentuploads',{'title':'Recent Uploads','imgs':docs});
 	});
 });

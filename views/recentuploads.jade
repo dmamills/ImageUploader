@@ -8,15 +8,16 @@ block content
 				- if (imgs.length > 0) {
 				-each img in imgs
 					li.recent
-						a(href='/imageview/#{img.url}', class='thumbnail')
-							img(src='/uploads/#{img.path}', width='260px',height='180px')
+						a(href='/imageview/#{img.urlName}', class='thumbnail')
+							img(src='data:#{img.img.contentType};base64,#{img.img.stringified}', width='260px',height='180px')
 						br
 						p Tags: 
 						span(id='tags') #{img.tags}
 				-} else {
 					p No images found. Try another Search
-					form(action='/search', method='POST')
+				-}
+
+			form(action='/search', method='POST')
+						h3 Tag Search
 						input(type='text',name='searchtags')
 						input(type='submit',value='Search',class='btn btn-primary')
-
-				-}
