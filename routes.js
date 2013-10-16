@@ -43,9 +43,6 @@ function postUpload(req,res){
 	
 	var imgfile = req.files.img;
 	var tags = req.body.imgtags.split(',');
-
-	console.log('tags: '+tags);
-	console.log(util.inspect(imgfile));	
 	
 	if(imgfile.type == 'image/png' || imgfile.type =='image/jpeg' || imgfile.type == 'image/jpg') {
 
