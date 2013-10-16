@@ -1,4 +1,5 @@
-var File = require('./models/File');
+var fs = require('fs'),
+	File = require('./models/File');
 
 function index(req,res){
 	res.render('index',{'title':'Image Uploader'});
