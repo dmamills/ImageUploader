@@ -1,9 +1,15 @@
-exports.c = function(){
+var mongoose = require('mongoose'),
+	connectionString = 'mongodb://localhost:27017';
 
-//setup mongo db
-	mongoose.connect('mongodb://',{
-		user:'',
-		pass:''
-	});
-};
+mongoose.connect(connectionString);
+var db = mongoose.connection;
 
+db.on('error',function(err) {
+        console.log('error connecting to db');
+});
+
+db.once('open',function(){
+        console.log('connection established');
+});
+
+module.exports = db;
