@@ -36,16 +36,16 @@ app.param('tag',params.tag);
 
 
 /* GET routes */
-app.get('/',routes.index);
-app.get('/uploads/:imgname',routes.getImageUpload);
-app.get('/imageview/:imgname',routes.getImageView);
-app.get('/recent',routes.getRecent);
-app.get('/recent/:tag',routes.getRecentTag);
-app.get('/about',routes.getAbout);
-app.get('/contact',routes.getContact);
+app.get('/',routes['get'].index);
+app.get('/uploads/:imgname',routes['get'].upload);
+app.get('/imageview/:imgname',routes['get'].view);
+app.get('/recent',routes['get'].recent);
+app.get('/recent/:tag',routes['get'].recentTag);
+app.get('/about',routes['get'].about);
+app.get('/contact',routes['get'].contact);
 
 /* POST routes */
-app.post('/upload',routes.postUpload);
-app.post('/search',routes.postSearch);
+app.post('/upload',routes['post'].upload);
+app.post('/search',routes['post'].search);
 
 app.listen(3000);
