@@ -2,9 +2,7 @@ var express = require('express');
 	db = require('./connectionManager'),
 	init = require('./init'),
 	routes = require('./routes'),
-	params = require('./params'),
-	File = require('./models/File');
-
+	params = require('./params');
 
 init();
 
@@ -20,17 +18,11 @@ app.use(express.static(__dirname+'/public'));
 app.use(app.router);
 app.use(express.logger('dev'));
 
-app.use(function(req,res){
-	res.render('404',{'title':'Page Not Found'});
-})
+/* error handling middleware */
+app.use(routes['error'].error);
+app.use(routes['error'].badError);
 
-app.use(function(err, req, res, next){
-  console.error(err.stack);
-  res.send(500, 'Something broke!');
-});
-
-
-/* Paramater middle ware */
+/* Parameter middleware */
 app.param('imgname',params.imageName);
 app.param('tag',params.tag);
 

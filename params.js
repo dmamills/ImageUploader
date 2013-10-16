@@ -17,8 +17,10 @@ function tag(req,res,next,tag){
     var a = [];
     a.push(tag);
 	File.where('tags').in(a).exec(function(err,docs) {
+
 		if(err)throw err;
 
+		//convert each to base64 encoding for display
 		for(var i =0; i < docs.length;i++) {
 			docs[i].img.stringified = docs[i].img.data.toString('base64');
 		}
