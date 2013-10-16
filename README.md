@@ -1,8 +1,7 @@
 ImageUploader
 =============
 
-A small image uploader created with Node, Express, Jade, Stylus, and Bootstrap
-
+A small image uploader created with Nodejs, Express, Jade, Mongodb and Bootstrap
 
 ## Development Copy
 Clone local repo

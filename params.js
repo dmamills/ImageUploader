@@ -1,9 +1,8 @@
 var File = require('./models/File');
 
-
 function imageName(req,res,next,imgname){
 
-	File.findOne({'urlName':imgname},function(err,doc){
+	File.findOne({'urlName':imgname},function(err,doc) {
 		if(err)throw err;
 
 		doc.img.stringified = doc.img.data.toString('base64');
@@ -14,14 +13,13 @@ function imageName(req,res,next,imgname){
 
 function tag(req,res,next,tag){
 
-	console.log('recieved param: '+tag);
     req.tagname = tag;
     var a = [];
     a.push(tag);
-	File.where('tags').in(a).exec(function(err,docs){
+	File.where('tags').in(a).exec(function(err,docs) {
 		if(err)throw err;
-		console.log('found: '+docs.length);
-		for(var i =0; i < docs.length;i++){
+
+		for(var i =0; i < docs.length;i++) {
 			docs[i].img.stringified = docs[i].img.data.toString('base64');
 		}
 

@@ -10,6 +10,7 @@ function upload(req,res){
 
 		var file = new File();
 
+		//sync because i don't understand nodejs yet...
 		file.img.data = fs.readFileSync(imgfile.path);
 		file.img.contentType = imgfile.type;
 		file.tags = tags;
@@ -18,6 +19,7 @@ function upload(req,res){
 		//search for last backslash, substring from there.
 		var pathName = imgfile.path.split('/');
 		file.urlName = pathName[pathName.length-1];
+		
 		file.save(function(err){
 
 			if(err)throw err;
@@ -33,7 +35,6 @@ function search(req,res){
 	var searchTag = req.body.searchtags
 	res.redirect('/recent/'+searchTag);
 }
-
 
 module.exports = {
 	upload:upload,
