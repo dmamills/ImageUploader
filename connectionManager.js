@@ -8,7 +8,7 @@ db.on('error',function(err) {
         console.log('error connecting to db');
 });
 
-db.once('open',function(){
+db.once('open',function() {
         console.log('connection established');
 });
 

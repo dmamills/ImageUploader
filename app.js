@@ -1,10 +1,7 @@
 var express = require('express');
 	db = require('./connectionManager'),
-	init = require('./init'),
 	routes = require('./routes'),
 	params = require('./params');
-
-init();
 
 var app = express();
 app.set('views',__dirname+'/views');

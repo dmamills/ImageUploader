@@ -1,6 +1,6 @@
 var File = require('./models/File');
 
-function imageName(req,res,next,imgname){
+function imageName(req,res,next,imgname) {
 
 	File.findOne({'urlName':imgname},function(err,doc) {
 		if(err)throw err;
@@ -17,7 +17,6 @@ function tag(req,res,next,tag){
     var a = [];
     a.push(tag);
 	File.where('tags').in(a).exec(function(err,docs) {
-
 		if(err)throw err;
 
 		//convert each to base64 encoding for display

@@ -1,7 +1,13 @@
 var fs = require('fs'),
 	File = require('./../models/File');
 
-function upload(req,res){
+
+function search(req,res) {
+	var searchTag = req.body.searchtags
+	res.redirect('/recent/'+searchTag);
+}
+
+function upload(req,res) {
 	
 	var imgfile = req.files.img;
 	var tags = req.body.imgtags.split(',');
@@ -29,11 +35,6 @@ function upload(req,res){
 	} else {
 		res.render('nofile',{'title':'No File Selected'});
 	}
-}
-
-function search(req,res){
-	var searchTag = req.body.searchtags
-	res.redirect('/recent/'+searchTag);
 }
 
 module.exports = {
